@@ -1,0 +1,16 @@
+{
+  "signIn": {
+    "welcome": "Anyone can cook!",
+    "email": "Email Address",
+    "password": "Password",
+    "signIn": "Sign In",
+    "forgotPassword": "Forgot Password?",
+    "or": "OR",
+    "signInWithGoogle": "Sign in with Google",
+    "signInWithApple": "Sign in with Apple",
+    "signInWithFacebook": "Sign in with Facebook",
+    "dontHaveAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "attemptingSignIn": "Attempting to sign in..."
+  }
+}
