@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/auth/facebook_sign_in_helper.dart';
 import 'package:flutter_application_1/auth/google_sign_in_helper.dart';
 import 'package:flutter_application_1/auth/recipe_auth_app_state.dart';
 import 'package:flutter_application_1/auth/screens/forgot_password_screen.dart';
@@ -165,6 +166,23 @@ class SignInScreen extends StatelessWidget {
                 icon: Icons.facebook, // Using a generic icon for mock
                 imageUrl:
                     'https://fonts.gstatic.com/s/i/productlogos/facebook_24dp/v6/24px.svg', // Placeholder
+                onPressed: () async {
+                  final userCredential =
+                      await FacebookSignInHelper.signInWithFacebook();
+                  if (userCredential != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Facebook sign-in successful!'),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Facebook sign-in failed or cancelled.'),
+                      ),
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 48.0),
 
