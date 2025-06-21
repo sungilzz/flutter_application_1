@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/common/country_dropdown.dart';
 import 'package:flutter_application_1/l10n/app_localizations.dart';
 
+import 'preference_screen.dart';
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -81,14 +83,9 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 64.0),
               ElevatedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        AppLocalizations.of(
-                              context,
-                            )?.translate('welcome.snackbar') ??
-                            'Navigating to personalization preferences...',
-                      ),
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PreferenceScreen(),
                     ),
                   );
                 },

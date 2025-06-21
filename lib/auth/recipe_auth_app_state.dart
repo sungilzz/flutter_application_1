@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth/recipe_auth_app.dart';
 import 'package:flutter_application_1/auth/screens/maintenance_screen.dart';
 import 'package:flutter_application_1/auth/screens/sign_in_screen.dart';
+import 'package:flutter_application_1/l10n/app_localizations.dart';
 import 'package:flutter_application_1/main/main_screen.dart';
 import 'package:flutter_application_1/onboarding/welcome_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class RecipeAuthAppState extends State<RecipeAuthApp> {
   // Manage the current displayed screen
@@ -83,8 +85,8 @@ class RecipeAuthAppState extends State<RecipeAuthApp> {
       title: 'Recipe App',
       theme: ThemeData(
         colorScheme: customColorScheme,
-        scaffoldBackgroundColor: Colors.grey[50], // Match background
-        fontFamily: 'Inter', // Prefer Inter as requested, or system default
+        scaffoldBackgroundColor: Colors.grey[50],
+        fontFamily: 'Inter',
         textTheme: TextTheme(
           headlineLarge: TextStyle(
             fontSize: 32.0,
@@ -98,14 +100,8 @@ class RecipeAuthAppState extends State<RecipeAuthApp> {
           ),
           bodyLarge: TextStyle(fontSize: 16.0, color: Colors.grey[700]),
           bodyMedium: TextStyle(fontSize: 14.0, color: Colors.grey[600]),
-          labelLarge: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-          ), // For buttons
-          labelMedium: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.w500,
-          ), // For links
+          labelLarge: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+          labelMedium: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
@@ -132,6 +128,13 @@ class RecipeAuthAppState extends State<RecipeAuthApp> {
           hintStyle: TextStyle(color: Colors.grey[400]),
         ),
       ),
+      localizationsDelegates: [
+        const AppLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en')],
       home: _initialized && _currentScreen != null
           ? _currentScreen!
           : const Scaffold(body: Center(child: CircularProgressIndicator())),

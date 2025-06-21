@@ -53,5 +53,51 @@
     "subtitle": "Tell us a little about your tastes and dietary needs so we can find recipes you'll love!",
     "button": "Get Started",
     "snackbar": "Navigating to personalization preferences..."
+  },
+  "preference": {
+    "title": "What you love?",
+    "headline": "What flavors and types do you love?",
+    "subtitle": "Select all that apply. You can change these anytime.",
+    "category": {
+      "FlavorProfiles": "Flavor Profiles",
+      "Cuisines": "Cuisines",
+      "RecipeTypes": "Recipe Types",
+      "DietaryPreferences": "Dietary Preferences"
+    },
+    "option": {
+      "spicy": "Spicy 🔥",
+      "sweet": "Sweet 🍬",
+      "savory": "Savory 🍄",
+      "sour": "Sour 🍋",
+      "umami": "Umami 🍜",
+      "mild": "Mild ☁️",
+      "italian": "Italian 🍝",
+      "mexican": "Mexican 🌮",
+      "asian": "Asian 🍣",
+      "indian": "Indian 🍛",
+      "mediterranean": "Mediterranean 🥗",
+      "american": "American 🍔",
+      "quick_easy": "Quick & Easy ⏱️",
+      "family_meals": "Family Meals 👨‍👩‍👧‍👦",
+      "healthy": "Healthy 🌱",
+      "gourmet": "Gourmet 🥂",
+      "baking": "Baking 🍰",
+      "soups": "Soups 🥣",
+      "salads": "Salads 🥬",
+      "desserts": "Desserts 🍮",
+      "meat_lovers": "Meat Lovers 🥩",
+      "protein_power": "Protein Power 💪",
+      "vegetarian": "Vegetarian 🥦",
+      "vegan": "Vegan 🌱",
+      "gluten_free": "Gluten-Free 🌾",
+      "keto": "Keto 🥑",
+      "low_carb": "Low-Carb 🍞",
+      "pescatarian": "Pescatarian 🐟",
+      "dairy_free": "Dairy-Free 🥛",
+      "nut_free": "Nut-Free 🥜",
+      "soy_free": "Soy-Free 🌿"
+    },
+    "selected": "Selected: {selected}",
+    "next": "Next"
   }
 }
