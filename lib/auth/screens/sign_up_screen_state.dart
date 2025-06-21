@@ -71,11 +71,15 @@ class SignUpScreenState extends State<SignUpScreen> {
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
-        _errorMessage = e.message ?? "Sign up failed.";
+        _errorMessage =
+            AppLocalizations.of(context)?.translate('signUp.signUpFailed') ??
+            "Sign up failed.";
       });
     } catch (e) {
       setState(() {
-        _errorMessage = "An unknown error occurred.";
+        _errorMessage =
+            AppLocalizations.of(context)?.translate('signUp.unknownError') ??
+            "An unknown error occurred.";
       });
     }
   }

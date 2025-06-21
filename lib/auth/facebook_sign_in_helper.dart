@@ -22,7 +22,7 @@ class FacebookSignInHelper {
         facebookAuthCredential,
       );
     } catch (e) {
-      print('Facebook sign-in error: $e');
+      print('Facebook sign-in error');
       return null;
     }
   }

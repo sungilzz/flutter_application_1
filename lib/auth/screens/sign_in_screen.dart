@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth/facebook_sign_in_helper.dart';
 import 'package:flutter_application_1/auth/google_sign_in_helper.dart';
@@ -12,6 +13,44 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _emailController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
+    String? _errorMessage;
+
+    Future<void> _signIn() async {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text;
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(
+                      context,
+                    )?.translate('signIn.emailSignInSuccess') ??
+                    'Sign in successful!',
+              ),
+            ),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        _errorMessage =
+            AppLocalizations.of(
+              context,
+            )?.translate('signIn.emailSignInFailed') ??
+            'Sign in failed. Please check your credentials.';
+        if (context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(_errorMessage!)));
+        }
+      }
+    }
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -45,6 +84,7 @@ class SignInScreen extends StatelessWidget {
 
               // Email Field
               TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   hintText:
                       AppLocalizations.of(context)?.translate('signIn.email') ??
@@ -57,6 +97,7 @@ class SignInScreen extends StatelessWidget {
 
               // Password Field
               TextFormField(
+                controller: _passwordController,
                 decoration: InputDecoration(
                   hintText:
                       AppLocalizations.of(
@@ -71,19 +112,7 @@ class SignInScreen extends StatelessWidget {
 
               // Sign In Button
               ElevatedButton(
-                onPressed: () {
-                  // Mock sign-in action
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        AppLocalizations.of(
-                              context,
-                            )?.translate('signIn.attemptingSignIn') ??
-                            '',
-                      ),
-                    ),
-                  );
-                },
+                onPressed: _signIn,
                 child: Text(
                   AppLocalizations.of(context)?.translate('signIn.signIn') ??
                       '',
@@ -91,21 +120,30 @@ class SignInScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
 
-              // Forgot Password Link
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    (context.findAncestorStateOfType<RecipeAuthAppState>())
-                        ?.navigateTo(const ForgotPasswordScreen());
-                  },
-                  child: Text(
+              // Don't have an account? Sign Up Link
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
                     AppLocalizations.of(
                           context,
-                        )?.translate('signIn.forgotPassword') ??
+                        )?.translate('signIn.dontHaveAccount') ??
                         '',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                ),
+                  TextButton(
+                    onPressed: () {
+                      (context.findAncestorStateOfType<RecipeAuthAppState>())
+                          ?.navigateTo(const SignUpScreen());
+                    },
+                    child: Text(
+                      AppLocalizations.of(
+                            context,
+                          )?.translate('signIn.signUp') ??
+                          '',
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 32.0),
 
@@ -204,32 +242,23 @@ class SignInScreen extends StatelessWidget {
                   }
                 },
               ),
-              const SizedBox(height: 48.0),
+              const SizedBox(height: 10.0),
 
-              // Don't have an account? Sign Up Link
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
+              // Forgot Password Link (moved to bottom)
+              Align(
+                alignment: Alignment.center,
+                child: TextButton(
+                  onPressed: () {
+                    (context.findAncestorStateOfType<RecipeAuthAppState>())
+                        ?.navigateTo(const ForgotPasswordScreen());
+                  },
+                  child: Text(
                     AppLocalizations.of(
                           context,
-                        )?.translate('signIn.dontHaveAccount') ??
+                        )?.translate('signIn.forgotPassword') ??
                         '',
-                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      (context.findAncestorStateOfType<RecipeAuthAppState>())
-                          ?.navigateTo(const SignUpScreen());
-                    },
-                    child: Text(
-                      AppLocalizations.of(
-                            context,
-                          )?.translate('signIn.signUp') ??
-                          '',
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),

@@ -24,7 +24,7 @@ class GoogleSignInHelper {
       // Sign in to Firebase with the Google [UserCredential]
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
-      print('Google sign-in error: $e');
+      print('Google sign-in error');
       return null;
     }
   }

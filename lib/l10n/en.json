@@ -15,7 +15,9 @@
     "googleSignInSuccess": "Google sign-in successful!",
     "googleSignInFailed": "Google sign-in failed or cancelled.",
     "facebookSignInSuccess": "Facebook sign-in successful!",
-    "facebookSignInFailed": "Facebook sign-in failed or cancelled."
+    "facebookSignInFailed": "Facebook sign-in failed or cancelled.",
+    "emailSignInSuccess": "Sign in successful!",
+    "emailSignInFailed": "Sign in failed. Please check your credentials."
   },
   "signUp": {
     "title": "Create Your Account",
@@ -30,6 +32,8 @@
     "errorFillFields": "Please fill all fields correctly.",
     "success": "Sign up successful! Verification email sent.",
     "alreadyHaveAccount": "Already have an account?",
-    "signUp": "Sign Up"
+    "signUp": "Sign Up",
+    "signUpFailed": "Sign up failed.",
+    "unknownError": "An unknown error occurred."
   }
 }
