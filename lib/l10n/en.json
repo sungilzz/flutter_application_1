@@ -47,5 +47,11 @@
     "errorUserNotFound": "No user found for that email.",
     "errorInvalidEmail": "Invalid email address.",
     "errorUnknown": "An error occurred. Please try again."
+  },
+  "welcome": {
+    "title": "Personalize Your Recipe Journey",
+    "subtitle": "Tell us a little about your tastes and dietary needs so we can find recipes you'll love!",
+    "button": "Get Started",
+    "snackbar": "Navigating to personalization preferences..."
   }
 }
