@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/l10n/app_localizations.dart';
+import 'package:flutter_application_1/onboarding/ingredients_to_avoid_screen.dart';
 import 'package:flutter_application_1/onboarding/welcome_screen.dart';
 
 // -----------------------------------------------------------------------------
@@ -203,19 +204,9 @@ class _FlavorTypePreferencesScreenState extends State<PreferenceScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        (AppLocalizations.of(
-                                  context,
-                                )?.translate('preference.selected') ??
-                                'Selected: \\${_selectedPreferences.join(', ')}')
-                            .replaceFirst(
-                              '{selected}',
-                              _selectedPreferences.join(', '),
-                            ),
-                      ),
-                      duration: const Duration(seconds: 2),
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const IngredientsToAvoidScreen(),
                     ),
                   );
                 },

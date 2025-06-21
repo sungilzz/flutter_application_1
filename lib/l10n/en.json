@@ -99,5 +99,39 @@
     },
     "selected": "Selected: {selected}",
     "next": "Next"
+  },
+  "allergens": {
+    "title": "Avoid These Ingredients",
+    "headline": "Select ingredients you want to avoid",
+    "subtitle": "We'll exclude these from your recipe recommendations.",
+    "commonAllergens": "Common Allergens",
+    "dairy": "Dairy",
+    "gluten": "Gluten",
+    "nuts": "Nuts",
+    "eggs": "Eggs",
+    "soy": "Soy",
+    "fish": "Fish",
+    "shellfish": "Shellfish",
+    "none": "None",
+    "selected": "Selected: {selected}",
+    "next": "Next"
+  },
+  "ingredientsToAvoid": {
+    "title": "Any ingredients to avoid?",
+    "headline": "Tell us about allergies or ingredients you just don't like. We'll filter them out.",
+    "commonAllergens": "Common Allergens (Quick Add)",
+    "addOther": "Add other ingredients",
+    "inputHint": "Type an ingredient to avoid (e.g., cilantro, mushrooms)",
+    "finish": "Finish",
+    "finishMessage": "Personalization complete!\nAvoiding: {ingredients}"
+  },
+  "ingredient": {
+    "dairy": "Dairy 🥛",
+    "gluten": "Gluten 🌾",
+    "nuts": "Nuts 🥜",
+    "eggs": "Eggs 🥚",
+    "soy": "Soy 🌱",
+    "fish": "Fish 🐟",
+    "shellfish": "Shellfish 🦐"
   }
 }
