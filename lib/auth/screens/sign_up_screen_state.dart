@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth/recipe_auth_app_state.dart';
 import 'package:flutter_application_1/auth/screens/sign_in_screen.dart';
 import 'package:flutter_application_1/auth/screens/sign_up_screen.dart';
+import 'package:flutter_application_1/l10n/app_localizations.dart';
 
 class SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -13,6 +16,7 @@ class SignUpScreenState extends State<SignUpScreen> {
   bool _isPasswordNumberValid = false;
   bool _isPasswordSpecialValid = false;
   bool _passwordsMatch = false;
+  String? _errorMessage;
 
   void _validatePassword(String password) {
     setState(() {
@@ -20,7 +24,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       _isPasswordUppercaseValid = password.contains(RegExp(r'[A-Z]'));
       _isPasswordNumberValid = password.contains(RegExp(r'[0-9]'));
       _isPasswordSpecialValid = password.contains(
-        RegExp(r'[!@#$%^&*()_+\-=\[\]{};":\\|,.<>\/?]'),
+        RegExp(r'[!@#\$%^&*()_+\-=\[\]{};":\\|,.<>\/?]'),
       );
       _passwordsMatch = password == _confirmPasswordController.text;
     });
@@ -30,6 +34,50 @@ class SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       _passwordsMatch = _passwordController.text == confirmPassword;
     });
+  }
+
+  Future<void> _signUp() async {
+    setState(() {
+      _errorMessage = null;
+    });
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    if (email.isEmpty ||
+        !_isPasswordLengthValid ||
+        !_isPasswordUppercaseValid ||
+        !_isPasswordNumberValid ||
+        !_isPasswordSpecialValid ||
+        !_passwordsMatch) {
+      setState(() {
+        _errorMessage =
+            AppLocalizations.of(context)?.translate('signUp.errorFillFields') ??
+            "Please fill all fields correctly.";
+      });
+      return;
+    }
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      await userCredential.user?.sendEmailVerification();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)?.translate('signUp.success') ??
+                  'Sign up successful! Verification email sent.',
+            ),
+          ),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message ?? "Sign up failed.";
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = "An unknown error occurred.";
+      });
+    }
   }
 
   @override
@@ -43,28 +91,43 @@ class SignUpScreenState extends State<SignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Create Your Account',
+                AppLocalizations.of(context)?.translate('signUp.title') ??
+                    'Create Your Account',
                 style: Theme.of(context).textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32.0),
-
-              // Email Field
+              if (_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               TextFormField(
-                decoration: const InputDecoration(
-                  hintText: 'Email Address',
-                  prefixIcon: Icon(Icons.mail_outline),
+                controller: _emailController,
+                decoration: InputDecoration(
+                  hintText:
+                      AppLocalizations.of(
+                        context,
+                      )?.translate('signUp.emailHint') ??
+                      'Email Address',
+                  prefixIcon: const Icon(Icons.mail_outline),
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16.0),
-
-              // Password Field
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(
-                  hintText: 'Password',
-                  prefixIcon: Icon(Icons.lock_outline),
+                decoration: InputDecoration(
+                  hintText:
+                      AppLocalizations.of(
+                        context,
+                      )?.translate('signUp.passwordHint') ??
+                      'Password',
+                  prefixIcon: const Icon(Icons.lock_outline),
                 ),
                 obscureText: true,
                 onChanged: _validatePassword,
@@ -74,64 +137,78 @@ class SignUpScreenState extends State<SignUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildPasswordRequirement(
-                    'Minimum 8 characters',
+                    AppLocalizations.of(
+                          context,
+                        )?.translate('signUp.min8Chars') ??
+                        'Minimum 8 characters',
                     _isPasswordLengthValid,
                     context,
                   ),
                   _buildPasswordRequirement(
-                    'At least one uppercase letter',
+                    AppLocalizations.of(
+                          context,
+                        )?.translate('signUp.oneUpper') ??
+                        'At least one uppercase letter',
                     _isPasswordUppercaseValid,
                     context,
                   ),
                   _buildPasswordRequirement(
-                    'At least one number',
+                    AppLocalizations.of(
+                          context,
+                        )?.translate('signUp.oneNumber') ??
+                        'At least one number',
                     _isPasswordNumberValid,
                     context,
                   ),
                   _buildPasswordRequirement(
-                    'At least one special character (!@#\$ etc.)',
+                    AppLocalizations.of(
+                          context,
+                        )?.translate('signUp.oneSpecial') ??
+                        'At least one special character (!@#\$ etc.)',
                     _isPasswordSpecialValid,
                     context,
                   ),
                 ],
               ),
               const SizedBox(height: 16.0),
-
-              // Confirm Password Field
               TextFormField(
                 controller: _confirmPasswordController,
                 decoration: InputDecoration(
-                  hintText: 'Confirm Password',
+                  hintText:
+                      AppLocalizations.of(
+                        context,
+                      )?.translate('signUp.confirmPasswordHint') ??
+                      'Confirm Password',
                   prefixIcon: const Icon(Icons.lock_outline),
                   errorText:
                       _confirmPasswordController.text.isNotEmpty &&
                           !_passwordsMatch
-                      ? 'Passwords do not match.'
+                      ? AppLocalizations.of(
+                              context,
+                            )?.translate('signUp.passwordsNoMatch') ??
+                            'Passwords do not match.'
                       : null,
                 ),
                 obscureText: true,
                 onChanged: _checkConfirmPassword,
               ),
               const SizedBox(height: 32.0),
-
-              // Sign Up Button
               ElevatedButton(
-                onPressed: () {
-                  // Mock sign-up action
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Attempting to sign up...')),
-                  );
-                },
-                child: const Text('Sign Up'),
+                onPressed: _signUp,
+                child: Text(
+                  AppLocalizations.of(context)?.translate('signUp.signUp') ??
+                      'Sign Up',
+                ),
               ),
               const SizedBox(height: 48.0),
-
-              // Already have an account? Sign In Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Already have an account?",
+                    AppLocalizations.of(
+                          context,
+                        )?.translate('signUp.alreadyHaveAccount') ??
+                        "Already have an account?",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   TextButton(
@@ -139,7 +216,12 @@ class SignUpScreenState extends State<SignUpScreen> {
                       (context.findAncestorStateOfType<RecipeAuthAppState>())
                           ?.navigateTo(const SignInScreen());
                     },
-                    child: const Text('Sign In'),
+                    child: Text(
+                      AppLocalizations.of(
+                            context,
+                          )?.translate('signIn.signIn') ??
+                          'Sign In',
+                    ),
                   ),
                 ],
               ),
@@ -152,7 +234,7 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildPasswordRequirement(
     String text,
-    bool isValid,
+    bool valid,
     BuildContext context,
   ) {
     return Padding(
@@ -160,15 +242,15 @@ class SignUpScreenState extends State<SignUpScreen> {
       child: Row(
         children: [
           Icon(
-            isValid ? Icons.check_circle_outline : Icons.cancel_outlined,
-            color: isValid ? Colors.green : Colors.red,
+            valid ? Icons.check_circle_outline : Icons.cancel_outlined,
+            color: valid ? Colors.green : Colors.red,
             size: 18.0,
           ),
           const SizedBox(width: 8.0),
           Text(
             text,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: isValid ? Colors.green[700] : Colors.red[700],
+              color: valid ? Colors.green[700] : Colors.red[700],
             ),
           ),
         ],

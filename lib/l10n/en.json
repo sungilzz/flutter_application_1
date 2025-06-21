@@ -12,5 +12,20 @@
     "dontHaveAccount": "Don't have an account?",
     "signUp": "Sign Up",
     "attemptingSignIn": "Attempting to sign in..."
+  },
+  "signUp": {
+    "title": "Create Your Account",
+    "emailHint": "Email Address",
+    "passwordHint": "Password",
+    "confirmPasswordHint": "Confirm Password",
+    "min8Chars": "Minimum 8 characters",
+    "oneUpper": "At least one uppercase letter",
+    "oneNumber": "At least one number",
+    "oneSpecial": "At least one special character (!@#$ etc.)",
+    "passwordsNoMatch": "Passwords do not match.",
+    "errorFillFields": "Please fill all fields correctly.",
+    "success": "Sign up successful! Verification email sent.",
+    "alreadyHaveAccount": "Already have an account?",
+    "signUp": "Sign Up"
   }
 }
