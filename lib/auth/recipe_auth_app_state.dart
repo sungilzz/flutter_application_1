@@ -1,11 +1,58 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth/recipe_auth_app.dart';
+import 'package:flutter_application_1/auth/screens/maintenance_screen.dart';
 import 'package:flutter_application_1/auth/screens/sign_in_screen.dart';
-import 'package:flutter_application_1/l10n/app_localizations.dart';
+import 'package:flutter_application_1/main/main_screen.dart';
+import 'package:flutter_application_1/onboarding/welcome_screen.dart';
 
 class RecipeAuthAppState extends State<RecipeAuthApp> {
   // Manage the current displayed screen
-  Widget _currentScreen = const SignInScreen();
+  Widget? _currentScreen;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthAndOnboarding();
+  }
+
+  Future<void> _checkAuthAndOnboarding() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      setState(() {
+        _currentScreen = const SignInScreen();
+        _initialized = true;
+      });
+      return;
+    }
+    try {
+      // Check onboarding status from Firestore (users/{uid}/onboarding)
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .timeout(const Duration(seconds: 5));
+      final onboarding = doc.data()?['onboarding'] as bool?;
+      if (onboarding == true) {
+        setState(() {
+          _currentScreen = const MainScreen();
+          _initialized = true;
+        });
+      } else {
+        setState(() {
+          _currentScreen = const WelcomeScreen();
+          _initialized = true;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _currentScreen = const MaintenanceScreen();
+        _initialized = true;
+      });
+    }
+  }
 
   void navigateTo(Widget screen) {
     setState(() {
@@ -77,48 +124,17 @@ class RecipeAuthAppState extends State<RecipeAuthApp> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(
-              color: customColorScheme.primary,
-              width: 2.0,
-            ),
+            borderSide: BorderSide(width: 2.0),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(color: Colors.red, width: 2.0),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
             borderSide: const BorderSide(color: Colors.red, width: 2.0),
           ),
           hintStyle: TextStyle(color: Colors.grey[400]),
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: customColorScheme.primary, // Primary button color
-            foregroundColor:
-                customColorScheme.onPrimary, // Text color on primary
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-            elevation: 3,
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: customColorScheme.primary, // Link color
-            textStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
-          ),
-        ),
       ),
-      localizationsDelegates: [
-        const AppLocalizationsDelegate(),
-        DefaultWidgetsLocalizations.delegate,
-        DefaultMaterialLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en')],
-      home: _currentScreen, // Display the current screen
+      home: _initialized && _currentScreen != null
+          ? _currentScreen!
+          : const Scaffold(body: Center(child: CircularProgressIndicator())),
     );
   }
 }
