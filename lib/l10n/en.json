@@ -11,7 +11,11 @@
     "signInWithFacebook": "Sign in with Facebook",
     "dontHaveAccount": "Don't have an account?",
     "signUp": "Sign Up",
-    "attemptingSignIn": "Attempting to sign in..."
+    "attemptingSignIn": "Attempting to sign in...",
+    "googleSignInSuccess": "Google sign-in successful!",
+    "googleSignInFailed": "Google sign-in failed or cancelled.",
+    "facebookSignInSuccess": "Facebook sign-in successful!",
+    "facebookSignInFailed": "Facebook sign-in failed or cancelled."
   },
   "signUp": {
     "title": "Create Your Account",

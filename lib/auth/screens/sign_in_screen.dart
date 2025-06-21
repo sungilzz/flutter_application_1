@@ -138,14 +138,24 @@ class SignInScreen extends StatelessWidget {
                       await GoogleSignInHelper.signInWithGoogle();
                   if (userCredential != null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Google sign-in successful!'),
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(
+                                context,
+                              )?.translate('signIn.googleSignInSuccess') ??
+                              'Google sign-in successful!',
+                        ),
                       ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Google sign-in failed or cancelled.'),
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(
+                                context,
+                              )?.translate('signIn.googleSignInFailed') ??
+                              'Google sign-in failed or cancelled.',
+                        ),
                       ),
                     );
                   }
@@ -171,14 +181,24 @@ class SignInScreen extends StatelessWidget {
                       await FacebookSignInHelper.signInWithFacebook();
                   if (userCredential != null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Facebook sign-in successful!'),
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(
+                                context,
+                              )?.translate('signIn.facebookSignInSuccess') ??
+                              'Facebook sign-in successful!',
+                        ),
                       ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Facebook sign-in failed or cancelled.'),
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(
+                                context,
+                              )?.translate('signIn.facebookSignInFailed') ??
+                              'Facebook sign-in failed or cancelled.',
+                        ),
                       ),
                     );
                   }
