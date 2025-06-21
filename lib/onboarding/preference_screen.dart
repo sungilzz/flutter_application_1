@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/l10n/app_localizations.dart';
 import 'package:flutter_application_1/onboarding/ingredients_to_avoid_screen.dart';
 import 'package:flutter_application_1/onboarding/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // -----------------------------------------------------------------------------
 // Screen 2: Flavor & Type Preferences (Initial Broad Strokes)
@@ -76,6 +77,30 @@ class _FlavorTypePreferencesScreenState extends State<PreferenceScreen> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedPreferences();
+  }
+
+  Future<void> _loadSelectedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String>? savedPrefs = prefs.getStringList(
+      'selected_preferences',
+    );
+    if (savedPrefs != null) {
+      setState(() {
+        _selectedPreferences.clear();
+        _selectedPreferences.addAll(savedPrefs);
+      });
+    }
+  }
+
+  Future<void> _saveSelectedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('selected_preferences', _selectedPreferences);
+  }
+
   // Function to handle chip selection/deselection
   void _togglePreference(String preference) {
     setState(() {
@@ -85,6 +110,7 @@ class _FlavorTypePreferencesScreenState extends State<PreferenceScreen> {
         _selectedPreferences.add(preference);
       }
     });
+    _saveSelectedPreferences();
   }
 
   @override
@@ -203,7 +229,8 @@ class _FlavorTypePreferencesScreenState extends State<PreferenceScreen> {
             // Next Button
             Center(
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  await _saveSelectedPreferences();
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const IngredientsToAvoidScreen(),

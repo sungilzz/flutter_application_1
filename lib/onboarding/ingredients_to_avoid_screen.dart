@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/l10n/app_localizations.dart';
 import 'package:flutter_application_1/onboarding/preference_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // -----------------------------------------------------------------------------
 // Screen 3: Ingredients to Avoid (Allergies & Dislikes)
@@ -38,6 +39,28 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadAvoidIngredients();
+  }
+
+  Future<void> _loadAvoidIngredients() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String>? savedAvoid = prefs.getStringList('avoid_ingredients');
+    if (savedAvoid != null) {
+      setState(() {
+        _avoidIngredients.clear();
+        _avoidIngredients.addAll(savedAvoid);
+      });
+    }
+  }
+
+  Future<void> _saveAvoidIngredients() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('avoid_ingredients', _avoidIngredients);
+  }
+
   // Function to add an ingredient to the avoid list
   void _addAvoidIngredient(String ingredient) {
     final String trimmedIngredient = ingredient.trim();
@@ -47,6 +70,7 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
         _avoidIngredients.add(trimmedIngredient);
         _ingredientInputController.clear(); // Clear input after adding
       });
+      _saveAvoidIngredients();
     }
   }
 
@@ -55,6 +79,7 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
     setState(() {
       _avoidIngredients.remove(ingredient);
     });
+    _saveAvoidIngredients();
   }
 
   @override
@@ -327,15 +352,15 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
               // Finish Button
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Mock action for finishing personalization
+                  onPressed: () async {
+                    await _saveAvoidIngredients();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
                           (AppLocalizations.of(context)?.translate(
                                     'ingredientsToAvoid.finishMessage',
                                   ) ??
-                                  'Personalization complete!\nAvoiding: ${_avoidIngredients.join(', ')}')
+                                  'Personalization complete!\nAvoiding: \\${_avoidIngredients.join(', ')}')
                               .replaceFirst(
                                 '{ingredients}',
                                 _avoidIngredients.join(', '),
