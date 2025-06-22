@@ -6,6 +6,7 @@ class SocialSignInButton extends StatelessWidget {
   final Color textColor;
   final IconData? icon;
   final String? imageUrl; // For more specific brand logos
+  final VoidCallback? onPressed;
 
   const SocialSignInButton({
     super.key,
@@ -14,17 +15,20 @@ class SocialSignInButton extends StatelessWidget {
     this.textColor = Colors.white,
     this.icon,
     this.imageUrl,
+    this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        // Mock action
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Sign in with $provider')));
-      },
+      onPressed:
+          onPressed ??
+          () {
+            // Mock action
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Sign in with $provider')));
+          },
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         foregroundColor: textColor,
