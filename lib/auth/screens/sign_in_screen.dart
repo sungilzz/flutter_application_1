@@ -36,6 +36,7 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
           );
+          RecipeAuthAppState.of(context)?.checkAuthAndOnboarding();
         }
       } on FirebaseAuthException catch (e) {
         _errorMessage =
@@ -185,6 +186,7 @@ class SignInScreen extends StatelessWidget {
                         ),
                       ),
                     );
+                    RecipeAuthAppState.of(context)?.checkAuthAndOnboarding();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -200,13 +202,13 @@ class SignInScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16.0),
-              SocialSignInButton(
-                provider: 'Apple',
-                backgroundColor: Colors.black,
-                icon: Icons.apple, // Using a generic icon for mock
-                imageUrl:
-                    'https://fonts.gstatic.com/s/i/productlogos/apple_black/v6/24px.svg', // Placeholder
-              ),
+              // SocialSignInButton(
+              //   provider: 'Apple',
+              //   backgroundColor: Colors.black,
+              //   icon: Icons.apple, // Using a generic icon for mock
+              //   imageUrl:
+              //       'https://fonts.gstatic.com/s/i/productlogos/apple_black/v6/24px.svg', // Placeholder
+              // ),
               const SizedBox(height: 16.0),
               SocialSignInButton(
                 provider: 'Facebook',
@@ -228,6 +230,7 @@ class SignInScreen extends StatelessWidget {
                         ),
                       ),
                     );
+                    RecipeAuthAppState.of(context)?.checkAuthAndOnboarding();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

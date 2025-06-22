@@ -68,6 +68,7 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         );
+        RecipeAuthAppState.of(context)?.checkAuthAndOnboarding();
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

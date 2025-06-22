@@ -17,10 +17,10 @@ class RecipeAuthAppState extends State<RecipeAuthApp> {
   @override
   void initState() {
     super.initState();
-    _checkAuthAndOnboarding();
+    checkAuthAndOnboarding();
   }
 
-  Future<void> _checkAuthAndOnboarding() async {
+  Future<void> checkAuthAndOnboarding() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       setState(() {
@@ -60,6 +60,11 @@ class RecipeAuthAppState extends State<RecipeAuthApp> {
     setState(() {
       _currentScreen = screen;
     });
+  }
+
+  // Allows access to RecipeAuthAppState from child widgets
+  static RecipeAuthAppState? of(BuildContext context) {
+    return context.findAncestorStateOfType<RecipeAuthAppState>();
   }
 
   @override

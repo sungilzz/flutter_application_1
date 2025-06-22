@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../auth/recipe_auth_app_state.dart';
 import 'change_email_screen.dart';
 import 'payment_history_screen.dart';
 import 'reset_password_flow_screen.dart';
@@ -505,11 +507,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                   ),
-                  onPressed: () {
-                    // TODO: Implement actual sign out logic
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Signed out (mock)!')),
-                    );
+                  onPressed: () async {
+                    try {
+                      await FirebaseAuth.instance.signOut();
+                      if (mounted) {
+                        // Find the nearest ancestor RecipeAuthAppState and call _checkAuthAndOnboarding
+                        final recipeAuthAppState = context
+                            .findAncestorStateOfType<RecipeAuthAppState>();
+                        if (recipeAuthAppState != null) {
+                          await recipeAuthAppState.checkAuthAndOnboarding();
+                        }
+                        // Optionally show a message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Signed out successfully.'),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Sign out failed: \\${e.toString()}'),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
