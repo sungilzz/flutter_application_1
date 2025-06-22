@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../settings/settings_screen.dart';
+
 // -----------------------------------------------------------------------------
 // Screen 1: Main Screen - Your Recipe Hub
 // -----------------------------------------------------------------------------
@@ -11,6 +13,210 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+  final List<Widget> _screens = [
+    MainScreenContent(),
+    // Placeholder widgets for Cart and Saved
+    Center(child: Text('Cart')),
+    Center(child: Text('Saved')),
+    SettingsScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    // Define the vibrant, food-inspired color scheme
+    final ColorScheme customColorScheme = ColorScheme.light(
+      primary: const Color(0xFFE57373), // A soft red/coral
+      primaryContainer: const Color(0xFFFFCDD2),
+      secondary: const Color(0xFF81C784), // A vibrant green
+      secondaryContainer: const Color(0xFFC8E6C9),
+      surface: Colors.white,
+      background: Colors.grey[50]!,
+      error: Colors.red[700]!,
+      onPrimary: Colors.white,
+      onSecondary: Colors.black,
+      onSurface: Colors.black87,
+      onBackground: Colors.black87,
+      onError: Colors.white,
+      brightness: Brightness.light,
+    );
+
+    // Apply the custom color scheme and text theme to the current context's theme
+    final ThemeData theme = Theme.of(context).copyWith(
+      colorScheme: customColorScheme,
+      scaffoldBackgroundColor: Colors.grey[50],
+      textTheme: TextTheme(
+        headlineLarge: TextStyle(
+          fontSize: 32.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[850],
+          fontFamily: 'Inter',
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[800],
+          fontFamily: 'Inter',
+        ),
+        bodyLarge: TextStyle(
+          fontSize: 16.0,
+          color: Colors.grey[700],
+          fontFamily: 'Inter',
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 14.0,
+          color: Colors.grey[600],
+          fontFamily: 'Inter',
+        ),
+        labelLarge: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'Inter',
+        ),
+        labelMedium: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'Inter',
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16.0,
+          horizontal: 16.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(color: customColorScheme.primary, width: 2.0),
+        ),
+        hintStyle: TextStyle(color: Colors.grey[400]),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: customColorScheme.primary,
+          foregroundColor: customColorScheme.onPrimary,
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+          elevation: 3,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: customColorScheme.primary,
+          textStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        selectedColor: customColorScheme.primary.withOpacity(0.2),
+        checkmarkColor: customColorScheme.primary,
+        labelStyle: const TextStyle(
+          fontSize: 14.0,
+          color: Colors.grey,
+          fontWeight: FontWeight.w500,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        side: BorderSide(color: Colors.grey[300]!, width: 1.0),
+        backgroundColor: Colors.white,
+      ),
+    );
+
+    return Theme(
+      data: theme,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          elevation: 0,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Anyone can cook', style: theme.textTheme.headlineMedium),
+              IconButton(
+                icon: const Icon(Icons.person_outline, size: 28),
+                color: Colors.grey[700],
+                onPressed: () {
+                  // Switch to the Settings tab in the bottom navigation bar
+                  final mainScreenState = context
+                      .findAncestorStateOfType<_MainScreenState>();
+                  if (mainScreenState != null) {
+                    mainScreenState.setState(() {
+                      mainScreenState._selectedIndex = 3;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        body: _screens[_selectedIndex],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, -3),
+              ),
+            ],
+          ),
+          child: BottomNavigationBar(
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_cart_outlined),
+                label: 'Cart',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.bookmark_border),
+                label: 'Saved',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings_outlined),
+                label: 'Settings',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: theme.colorScheme.primary,
+            unselectedItemColor: Colors.grey[600],
+            onTap: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            type: BottomNavigationBarType.fixed,
+            selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Extract the main content of MainScreen to a separate widget
+class MainScreenContent extends StatefulWidget {
+  @override
+  State<MainScreenContent> createState() => _MainScreenContentState();
+}
+
+class _MainScreenContentState extends State<MainScreenContent> {
   // Mock data for recipe and ingredients
   Map<String, dynamic> _currentRecipe = {
     'title': 'Spicy Garlic Noodles with Shrimp',
@@ -234,25 +440,30 @@ class _MainScreenState extends State<MainScreen> {
     return Theme(
       data: theme,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          elevation: 0,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Anyone can cook', style: theme.textTheme.headlineMedium),
-              IconButton(
-                icon: const Icon(Icons.person_outline, size: 28),
-                color: Colors.grey[700],
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Go to Profile/Settings')),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: theme.scaffoldBackgroundColor,
+        //   elevation: 0,
+        //   title: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text('Anyone can cook', style: theme.textTheme.headlineMedium),
+        //       IconButton(
+        //         icon: const Icon(Icons.person_outline, size: 28),
+        //         color: Colors.grey[700],
+        //         onPressed: () {
+        //           // Switch to the Settings tab in the bottom navigation bar
+        //           final mainScreenState = context
+        //               .findAncestorStateOfType<_MainScreenState>();
+        //           if (mainScreenState != null) {
+        //             mainScreenState.setState(() {
+        //               mainScreenState._selectedIndex = 3;
+        //             });
+        //           }
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
         body: Column(
           children: [
             Expanded(
@@ -694,89 +905,6 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(height: 24.0), // Padding before bottom nav
                   ],
                 ),
-              ),
-            ),
-            // Bottom Navigation Bar
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, -3), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: BottomNavigationBar(
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home_outlined),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Stack(
-                      children: [
-                        Icon(Icons.shopping_cart_outlined),
-                        if (_currentRecipe['ingredients']
-                            .isNotEmpty) // Mock badge if ingredients exist
-                          Positioned(
-                            right: 0,
-                            child: Container(
-                              padding: EdgeInsets.all(1),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              constraints: BoxConstraints(
-                                minWidth: 12,
-                                minHeight: 12,
-                              ),
-                              child: Text(
-                                _currentRecipe['ingredients'].length
-                                    .toString(), // Mock count
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    label: 'Cart',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.bookmark_border),
-                    label: 'Saved',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.settings_outlined),
-                    label: 'Settings',
-                  ),
-                ],
-                currentIndex: 0, // Highlight Home as current screen
-                selectedItemColor: theme.colorScheme.primary,
-                unselectedItemColor: Colors.grey[600],
-                onTap: (index) {
-                  List<String> navLabels = [
-                    'Home',
-                    'Cart',
-                    'Saved',
-                    'Settings',
-                  ];
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Navigating to ${navLabels[index]}'),
-                    ),
-                  );
-                  // In a real app, use Navigator to push new routes
-                },
-                type: BottomNavigationBarType
-                    .fixed, // Ensure all labels are shown
-                selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ],
