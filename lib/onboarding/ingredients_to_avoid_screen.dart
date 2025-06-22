@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/l10n/app_localizations.dart';
+import 'package:flutter_application_1/main/main_screen.dart';
 import 'package:flutter_application_1/onboarding/preference_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,15 +25,15 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
   // List to hold ingredients selected to be avoided
   final List<String> _avoidIngredients = [];
 
-  // List of common allergens for quick selection
+  // List of common allergens for quick selection (store as keys, no emoji)
   final List<String> _commonAllergens = [
-    'ingredient.dairy',
-    'ingredient.gluten',
-    'ingredient.nuts',
-    'ingredient.eggs',
-    'ingredient.soy',
-    'ingredient.fish',
-    'ingredient.shellfish',
+    'dairy',
+    'gluten',
+    'nuts',
+    'eggs',
+    'soy',
+    'fish',
+    'shellfish',
   ];
 
   @override
@@ -62,12 +65,11 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
   }
 
   // Function to add an ingredient to the avoid list
-  void _addAvoidIngredient(String ingredient) {
-    final String trimmedIngredient = ingredient.trim();
-    if (trimmedIngredient.isNotEmpty &&
-        !_avoidIngredients.contains(trimmedIngredient)) {
+  void _addAvoidIngredient(String ingredientKey) {
+    final String trimmedKey = ingredientKey.trim();
+    if (trimmedKey.isNotEmpty && !_avoidIngredients.contains(trimmedKey)) {
       setState(() {
-        _avoidIngredients.add(trimmedIngredient);
+        _avoidIngredients.add(trimmedKey);
         _ingredientInputController.clear(); // Clear input after adding
       });
       _saveAvoidIngredients();
@@ -75,9 +77,9 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
   }
 
   // Function to remove an ingredient from the avoid list
-  void _removeAvoidIngredient(String ingredient) {
+  void _removeAvoidIngredient(String ingredientKey) {
     setState(() {
-      _avoidIngredients.remove(ingredient);
+      _avoidIngredients.remove(ingredientKey);
     });
     _saveAvoidIngredients();
   }
@@ -242,16 +244,18 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
                 runSpacing: 10.0,
                 children: _commonAllergens.map((allergenKey) {
                   final String allergen =
-                      AppLocalizations.of(context)?.translate(allergenKey) ??
+                      AppLocalizations.of(
+                        context,
+                      )?.translate('ingredient.' + allergenKey) ??
                       allergenKey;
                   final bool isAlreadyAdded = _avoidIngredients.contains(
-                    allergen,
+                    allergenKey,
                   );
                   return ActionChip(
                     label: Text(allergen),
                     onPressed: isAlreadyAdded
                         ? null
-                        : () => _addAvoidIngredient(allergen),
+                        : () => _addAvoidIngredient(allergenKey),
                     // Disable if already added
                     backgroundColor: isAlreadyAdded
                         ? theme.colorScheme.secondary.withOpacity(
@@ -318,10 +322,15 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
-                children: _avoidIngredients.map((ingredient) {
+                children: _avoidIngredients.map((ingredientKey) {
+                  final String ingredientLabel =
+                      AppLocalizations.of(
+                        context,
+                      )?.translate('ingredient.' + ingredientKey) ??
+                      ingredientKey;
                   return Chip(
-                    label: Text(ingredient),
-                    onDeleted: () => _removeAvoidIngredient(ingredient),
+                    label: Text(ingredientLabel),
+                    onDeleted: () => _removeAvoidIngredient(ingredientKey),
                     deleteIcon: Icon(
                       Icons.cancel,
                       size: 18.0,
@@ -354,22 +363,30 @@ class _IngredientsToAvoidScreenState extends State<IngredientsToAvoidScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     await _saveAvoidIngredients();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          (AppLocalizations.of(context)?.translate(
-                                    'ingredientsToAvoid.finishMessage',
-                                  ) ??
-                                  'Personalization complete!\nAvoiding: \\${_avoidIngredients.join(', ')}')
-                              .replaceFirst(
-                                '{ingredients}',
-                                _avoidIngredients.join(', '),
-                              ),
-                        ),
-                        duration: const Duration(seconds: 3),
+                    // Save to Firestore
+                    final prefs = await SharedPreferences.getInstance();
+                    final List<String>? selectedPreferences = prefs
+                        .getStringList('selected_preferences');
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(user.uid)
+                          .set({
+                            'selected_preferences': selectedPreferences ?? [],
+                            'avoid_ingredients': _avoidIngredients,
+                            'onboarding': true,
+                          }, SetOptions(merge: true));
+                    }
+                    // Reset onboarding data in SharedPreferences
+                    await prefs.remove('selected_preferences');
+                    await prefs.remove('avoid_ingredients');
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const MainScreen(),
                       ),
+                      (route) => false,
                     );
-                    // In a real app, this would navigate to the main recipe feed
                   },
                   child: Text(
                     AppLocalizations.of(

@@ -121,7 +121,7 @@
     "headline": "Tell us about allergies or ingredients you just don't like. We'll filter them out.",
     "commonAllergens": "Common Allergens (Quick Add)",
     "addOther": "Add other ingredients",
-    "inputHint": "Type an ingredient to avoid (e.g., cilantro, mushrooms)",
+    "inputHint": "Type an ingredient to avoid",
     "finish": "Finish",
     "finishMessage": "Personalization complete!\nAvoiding: {ingredients}"
   },
