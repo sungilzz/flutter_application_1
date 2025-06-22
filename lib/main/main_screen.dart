@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/auth_guard.dart';
 import '../settings/settings_screen.dart';
 
 // -----------------------------------------------------------------------------
@@ -15,11 +16,10 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   final List<Widget> _screens = [
-    MainScreenContent(),
-    // Placeholder widgets for Cart and Saved
-    Center(child: Text('Cart')),
-    Center(child: Text('Saved')),
-    SettingsAppWrapper(),
+    AuthGuard(child: MainScreenContent()),
+    AuthGuard(child: Center(child: Text('Cart'))),
+    AuthGuard(child: Center(child: Text('Saved'))),
+    AuthGuard(child: SettingsAppWrapper()),
   ];
 
   @override
