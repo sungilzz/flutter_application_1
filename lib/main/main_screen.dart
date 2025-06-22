@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     // Placeholder widgets for Cart and Saved
     Center(child: Text('Cart')),
     Center(child: Text('Saved')),
-    SettingsScreen(),
+    SettingsAppWrapper(),
   ];
 
   @override
@@ -137,30 +137,30 @@ class _MainScreenState extends State<MainScreen> {
     return Theme(
       data: theme,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          elevation: 0,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Anyone can cook', style: theme.textTheme.headlineMedium),
-              IconButton(
-                icon: const Icon(Icons.person_outline, size: 28),
-                color: Colors.grey[700],
-                onPressed: () {
-                  // Switch to the Settings tab in the bottom navigation bar
-                  final mainScreenState = context
-                      .findAncestorStateOfType<_MainScreenState>();
-                  if (mainScreenState != null) {
-                    mainScreenState.setState(() {
-                      mainScreenState._selectedIndex = 3;
-                    });
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: theme.scaffoldBackgroundColor,
+        //   elevation: 0,
+        //   title: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text('Anyone can cook', style: theme.textTheme.headlineMedium),
+        //       IconButton(
+        //         icon: const Icon(Icons.person_outline, size: 28),
+        //         color: Colors.grey[700],
+        //         onPressed: () {
+        //           // Switch to the Settings tab in the bottom navigation bar
+        //           final mainScreenState = context
+        //               .findAncestorStateOfType<_MainScreenState>();
+        //           if (mainScreenState != null) {
+        //             mainScreenState.setState(() {
+        //               mainScreenState._selectedIndex = 3;
+        //             });
+        //           }
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
         body: _screens[_selectedIndex],
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
@@ -440,30 +440,30 @@ class _MainScreenContentState extends State<MainScreenContent> {
     return Theme(
       data: theme,
       child: Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: theme.scaffoldBackgroundColor,
-        //   elevation: 0,
-        //   title: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        //       Text('Anyone can cook', style: theme.textTheme.headlineMedium),
-        //       IconButton(
-        //         icon: const Icon(Icons.person_outline, size: 28),
-        //         color: Colors.grey[700],
-        //         onPressed: () {
-        //           // Switch to the Settings tab in the bottom navigation bar
-        //           final mainScreenState = context
-        //               .findAncestorStateOfType<_MainScreenState>();
-        //           if (mainScreenState != null) {
-        //             mainScreenState.setState(() {
-        //               mainScreenState._selectedIndex = 3;
-        //             });
-        //           }
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        // ),
+        appBar: AppBar(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          elevation: 0,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Anyone can cook', style: theme.textTheme.headlineMedium),
+              IconButton(
+                icon: const Icon(Icons.person_outline, size: 28),
+                color: Colors.grey[700],
+                onPressed: () {
+                  // Switch to the Settings tab in the bottom navigation bar
+                  final mainScreenState = context
+                      .findAncestorStateOfType<_MainScreenState>();
+                  if (mainScreenState != null) {
+                    mainScreenState.setState(() {
+                      mainScreenState._selectedIndex = 3;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
         body: Column(
           children: [
             Expanded(
