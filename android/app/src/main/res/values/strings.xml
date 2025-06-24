@@ -1,6 +1,0 @@
-<resources>
-  <string name="facebook_app_id">__FACEBOOK_APP_ID__</string>
-  <string name="facebook_client_token">__FACEBOOK_CLIENT_TOKEN__</string>
-  <string name="fb_login_protocol_scheme">fb1234</string>
-  <string name="app_name">Anyone can cook</string>
-</resources>
