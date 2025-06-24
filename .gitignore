@@ -49,3 +49,4 @@ android/app/google-services.json
 
 # Facebook secrets (do not commit)
 android/app/src/main/res/values/strings.local.xml
+android/app/src/main/res/values/strings.xml
