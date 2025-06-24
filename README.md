@@ -13,3 +13,11 @@ Flutter, Firebase
 ## Screenshots
 
 https://github.com/sungilzz/flutter_application_1/tree/public-branch/screenshots
+
+## Notes
+
+Below files were ignored for Google, Facebook credentials
+
+- android/app/google-services.json (Google social signin, Firebase)
+- android/app/src/main/res/values/strings.local.xml (Facebook social signin)
+- android/app/src/main/res/values/strings.xml (Facebook social signin)
